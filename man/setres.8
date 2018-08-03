@@ -1,0 +1,77 @@
+.TH "setres" 8
+.SH "NAME"
+setres \- Create or modify a cobalt scheduler reservation
+.SH "SYNOPSIS"
+.B setres [modify or create reservation options] partition1 [ partition2 ... partitionN ]
+
+.B setres [id changing options] 
+
+.SH "DESCRIPTION"
+.TP
+This program creates or modifies a scheduler reservation.
+
+.SH "OPTIONS TO MODIFY OR CREATE RESERVATION (partition arguments required)"
+.TP
+.B \-\-debug
+Turn on communication debugging.
+.TP
+.B \-h \-\-help
+Displays the usage and a brief descriptions of the options
+.TP
+.B \-\-version
+Displays client revision and Cobalt version
+.TP
+.B \-A \-\-project
+Set project name
+.TP
+.B \-D \-\-defer
+Defer current (or next) iteration of recurring reservation (must be
+used with -m)
+.TP
+.B \-c \-\-cycletime
+Set the cycle time (in minutes or DD:HH:MM:SS).  This is the amount of
+time from reservation start until it is automatically renewed.  This
+can be used to create repeating reservations.
+.TP
+.B \-d \-\-duration
+Set duration (in minutes or HH:MM:SS)
+.TP
+.B \-m \-\-modify
+Modify an existing reservation, specified with -n.
+.TP
+.B \-n \-\-name
+Set reservation name
+.TP
+.B \-p \-\-partition
+Set use partition. Now optional
+.TP
+.B \-q \-\-queue
+Set the queue name, if something other than the standard reservation naming convention is desired.
+.TP
+.B \-s \-\-starttime
+Set start time (in format YYYY_MM_DD-HH:MM)
+.TP
+.B \-u \-\-user
+Set user for reservation. Set to "*" for all users.
+.TP
+.B \-\-allow_passthrough
+Allow pass through connection
+.TP
+.B \-\-block_passthrough
+Block pass through connections
+
+.SH "ID CHANGING OPTIONS (no partition arguments)"
+
+.TP
+.B \-\-cycle_id
+set cycle id
+.TP
+.B \-\-force_id 
+only used with \-\-res_id or \-\-cycle_id options
+.TP
+.B \-\-res_id
+reservation id (int)
+.SH "SEE ALSO"
+.BR showres (1),
+.BR releaseres (8)
+.SH "BUGS"

@@ -1,0 +1,157 @@
+.TH "cqadm" 8
+.SH "NAME"
+cqadm \- queue manager administration tool
+.SH "SYNOPSIS"
+.B cqadm [queue options] <queue> ... <queue>
+
+.B cqadm [jobid options] <jobid> ... <jobid>
+
+.B cqadm [no arg options]
+
+.SH "DESCRIPTION"
+Administrative interface for queue manager. Allows one to hold, run, kill, and set the queue for jobs in the queue manager. Can also add/del queues and set queue properties. 
+
+.SH "OPTIONS WITH NO VALUES AND NO ARGUMENTS"
+
+.TP
+.B \-d \-\-debug
+Turn on communication debugging
+.TP
+.B \-h \-\-help
+Displays the usage and a brief descriptions of the options
+.TP
+.B \-\-version
+Displays client revision and Cobalt version
+.TP
+.B \-f \-\-force
+Force queue deletion.
+.TP
+.B \-\-getq
+List queue(s) in queue manager
+
+.SH "OPTIONS WITH VALUES BUT NO ARGUMENTS (Stand alone opions)"
+
+.TP
+.B \-j \-\-setjobid=<next jobid>
+Set the jobID of the next job submitted to Cobalt
+.TP
+.B \-\-savestate=<filename>
+Pickles all the components to the specified file
+
+.SH "OPTIONS WITH NO VALUES BUT WITH QUEUE ARGUMENTS (Stand alone opions)"
+
+.TP
+.B \-\-addq queue(s)
+Add specified queue(s) to queue manager
+.TP
+.B \-\-delq queue(s)
+Delete specified queue(s) from queue manager
+.TP
+.B \-\-drainq queue(s)
+Drain queue(s). No new jobs can be submitted, and jobs already in the queue will run normally. Queue state is set to 'draining'.
+.TP
+.B \-\-killq queue(s)
+Kill the queue(s). No new jobs can be submitted, and no jobs in the queue will run. Queue state is set to 'dead'.
+.TP
+.B \-\-startq queue(s)
+Start queue(s). Queue state is set to 'running'.
+.TP
+.B \-\-stopq queue(s)
+Stop queue(s). Queue state is set to 'stopped'. New jobs can be submitted, but existing jobs will not be run.
+
+.SH "OPTIONS WITH VALUES BUT WITH QUEUE ARGUMENTS (Stand alone options)"
+.TP
+.B \-\-policy <Queue Policy> queue(s)
+Set queue policy for the queues specified.
+.TP
+.B \-\-setq 'prop=value prop=value' queue(s)
+Set properties for one or more queues. The prop=value pairs are separated by whitespace.
+.TP
+.B \-\-unsetq 'property property' queue(s)
+Move a property back to its unset state.  Used for example, to remove a queue restriction.
+
+.SH "OPTIONS WITH NO VALUES BUT WITH JOBID ARGUMENTS (Stand alone options)"
+.TP
+.B \-\-kill jobid(s)
+Kill job(s) using normal mechanism. Add -f or --force option for force kill. When forceable deletion used then this may leave processes dangling on computation resources.
+.TP
+.B \-\-preempt jobid(s)
+Preempt jobid.
+.TP
+.B \-\-hold jobid(s) \- deprecated use \-\-admin\-hold instead
+ Set job state to admin hold, preventing execution (only works on 'queued' jobs).
+.TP
+.B \-\-release jobid(s) \- deprecated use \-\-admin\-release instead
+Set job that is in admin hold state to ready, allowing execution. 
+.TP
+.B \-\-admin\-hold jobid(s)
+Set job state to admin hold, preventing execution (only works on 'queued' jobs)
+.TP
+.B \-\-admin\-release jobid(s)
+Set job that is in admin hold state to ready, allowing execution.
+.TP
+.B \-\-user\-hold jobid(s)
+Set job state to user hold, preventing execution (only works on 'queued' jobs)
+.TP
+.B \-\-user\-release jobid(s)
+Set job that is in user hold state to ready, allowing execution
+
+.SH "OPTIONS WITH VALUES and JOBID ARGUMENTS (The following options you can mix them together)"
+.TP
+.B \-\-queue=<queue> jobid(s)
+Move job to specified queue (only works on jobs that are not 'running')
+.TP
+.B \-\-run=<location> jobid(s)
+Run the job immediately on the specified location
+.TP
+.B \-\-time=<walltime> jobid(s)
+Change job walltime to specified one
+.TP
+.SH "Properties"
+.RS
+.TP
+.B maxtime=mm
+The maximum walltime (in minutes) allowed for jobs submitted to the queue.
+.TP
+.B mintime=mm
+The minimum walltime (in minutes) allowed for jobs submitted to the queue.
+.TP
+.B maxqueued=x
+The maximum number of jobs a user is allowed to have in the queue, whether running or queued.
+.TP
+.B users=user1:user2:user2
+List of users allowed to submit to the queue. An '*' means any user can submit to the queue.
+.TP
+.B state=running|stopped|draining|dead
+Flag determining state of queue. If the queue is 'stopped', jobs can be submitted to the queue, but no jobs will be run by the scheduler. If the queue is 'draining', no new jobs will be allowed to be added to the queue, but jobs existing in the queue will be run. If the queue is 'dead', no new jobs will be added and no existing jobs will be run. (Also provided by 
+.B "\-\-startq" "\-\-stopq" "\-\-drainq" "\-\-killq"
+).
+.TP
+.B adminemail=user@example.com:nobody@example.com
+Send an email at the start and stop of every job run through the specified queue.
+.TP
+.B maxrunning=x
+The maximum number of jobs a user is allowed to have running in the queue.
+.TP
+.B maxusernodes=x
+The maximum number of nodes a user is allowed to have allocated with running jobs in the queue.
+.TP
+.B totalnodes=x
+The maximum number of nodes any jobs in the queue are allowed to have allocated with running jobs.
+.TP
+.B priority=x
+The priority that should be set for the queue.  The default priority for a queue is 0, and larger numbers indicate higher priority.
+
+.SH "EXAMPLE"
+\" .IP
+Set no minimum walltime, a max walltime of 30 minutes, and only users 'mike, john, and george' can submit to someq:
+.IP
+.B cqadm --unsetq mintime someq
+.IP
+.B cqadm --setq 'maxtime=30 users=mike:john:george' someq
+
+
+.RE
+.SH "SEE ALSO"
+.BR cqm(8)
+.SH "BUGS"
